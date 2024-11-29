@@ -1,9 +1,9 @@
 {
   "mainAssemblyName": "BlazorSkiaWebAssemblyPerformanceTester",
   "resources": {
-    "hash": "sha256-R/txWiaBKwWIW4aXPaZGISsxQddnzZrNs9FfL4Tv/V0=",
+    "hash": "sha256-UGPDxzVU3i3dlnVaHF+VPgBUcqGn3egATWoC2ns2h/o=",
     "fingerprinting": {
-      "BlazorSkiaWebAssemblyPerformanceTester.byyn1h36pr.wasm": "BlazorSkiaWebAssemblyPerformanceTester.wasm",
+      "BlazorSkiaWebAssemblyPerformanceTester.866sp5okjm.wasm": "BlazorSkiaWebAssemblyPerformanceTester.wasm",
       "Microsoft.AspNetCore.Components.21jedljjy6.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ebic7ki2t1.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.pq7fdyw1tb.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
@@ -18,8 +18,8 @@
       "Microsoft.Extensions.Primitives.tcgeh3akx1.wasm": "Microsoft.Extensions.Primitives.wasm",
       "Microsoft.JSInterop.zjmphkhf43.wasm": "Microsoft.JSInterop.wasm",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "Microsoft.JSInterop.WebAssembly.wasm",
-      "SkiaSharp.Views.Blazor.ihh12yqk0u.wasm": "SkiaSharp.Views.Blazor.wasm",
-      "SkiaSharp.2kemnh8z6o.wasm": "SkiaSharp.wasm",
+      "SkiaSharp.Views.Blazor.kxzzhbvugs.wasm": "SkiaSharp.Views.Blazor.wasm",
+      "SkiaSharp.vgytqf42wa.wasm": "SkiaSharp.wasm",
       "System.Collections.Concurrent.g0ny4l55tq.wasm": "System.Collections.Concurrent.wasm",
       "System.Collections.Immutable.4p5o6w4a64.wasm": "System.Collections.Immutable.wasm",
       "System.Collections.tusebwqgtl.wasm": "System.Collections.wasm",
@@ -67,7 +67,7 @@
       "System.Runtime.InteropServices.JavaScript.3uvku0ibnu.wasm": "sha256-K5wa4QwWB8A0OrHM4yWK86Nl6ItEv9c3ctAASLMYLKo="
     },
     "assembly": {
-      "BlazorSkiaWebAssemblyPerformanceTester.byyn1h36pr.wasm": "sha256-Tbr4zS+7iP/XkbSEkGTEJLn8WYY8T0UmVfN+oWDRfzw=",
+      "BlazorSkiaWebAssemblyPerformanceTester.866sp5okjm.wasm": "sha256-QHt7PNmhdich7fGUwYSkjs20DYab06XmpeM3kLifjfs=",
       "Microsoft.AspNetCore.Components.21jedljjy6.wasm": "sha256-KheSm5pVjGmyZkiNB4cMUZi40iQpVE20LI5Nsj1sB8g=",
       "Microsoft.AspNetCore.Components.Web.ebic7ki2t1.wasm": "sha256-ur7dTXTU+qJS7EN76e7VeNVEcMa2dO+KiM7gCzale2M=",
       "Microsoft.AspNetCore.Components.WebAssembly.pq7fdyw1tb.wasm": "sha256-D/ZUWrvE7bqOtBfOWuLj+4RNqOvNZ0SnjD6QrBwUcb8=",
@@ -82,8 +82,8 @@
       "Microsoft.Extensions.Primitives.tcgeh3akx1.wasm": "sha256-TYdWPCwhKBdHQ79Fa7lunjzdUXfcxyaR1fAk0y11/ig=",
       "Microsoft.JSInterop.zjmphkhf43.wasm": "sha256-b4+QuhL/xsoj9HgglPM04q4Ykm5CG5Ne+Vot/VJUB8U=",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "sha256-99wG3VH14sWkwPaF5rX6YAcJvtAhDuqonwihvj2m5HA=",
-      "SkiaSharp.Views.Blazor.ihh12yqk0u.wasm": "sha256-xri6EbXUKkBipU/CJ1Dm9Fg7ifBhpPPZfZh99ZFhD+w=",
-      "SkiaSharp.2kemnh8z6o.wasm": "sha256-znGcz2/2luyqsOs8ElIMy/M958SHSBlQs6RmK+QG2AE=",
+      "SkiaSharp.Views.Blazor.kxzzhbvugs.wasm": "sha256-WDKvR8STl1nlDNu6oBeLRo+qh1C2y/Q547cC6Q9Lc6U=",
+      "SkiaSharp.vgytqf42wa.wasm": "sha256-vwlQP9J4xQoS2zD/UzhuKkjgoL5ylSG7kCZb82oxozA=",
       "System.Collections.Concurrent.g0ny4l55tq.wasm": "sha256-ADGWx8rPfs5ftD/wCG/cFqw585w1zgvqniZJtb7Jc2Q=",
       "System.Collections.Immutable.4p5o6w4a64.wasm": "sha256-KMeffaq/Vtz03KZ0FBqktKzzgrNwJu04cl/UEYmIFuA=",
       "System.Collections.tusebwqgtl.wasm": "sha256-lZTVOA+6SWhd1ogPx0LVFq+GZ3UJzblzJhLzqM0zYIU=",
