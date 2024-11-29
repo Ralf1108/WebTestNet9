@@ -1,9 +1,9 @@
 {
   "mainAssemblyName": "BlazorSkiaWebAssemblyPerformanceTester",
   "resources": {
-    "hash": "sha256-/8vbUWP0eTDSxtE8n5MGdEDPQ2rhgB4askS0VRwgwEg=",
+    "hash": "sha256-R/txWiaBKwWIW4aXPaZGISsxQddnzZrNs9FfL4Tv/V0=",
     "fingerprinting": {
-      "BlazorSkiaWebAssemblyPerformanceTester.aw8z38idhr.wasm": "BlazorSkiaWebAssemblyPerformanceTester.wasm",
+      "BlazorSkiaWebAssemblyPerformanceTester.byyn1h36pr.wasm": "BlazorSkiaWebAssemblyPerformanceTester.wasm",
       "Microsoft.AspNetCore.Components.21jedljjy6.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ebic7ki2t1.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.pq7fdyw1tb.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
@@ -67,7 +67,7 @@
       "System.Runtime.InteropServices.JavaScript.3uvku0ibnu.wasm": "sha256-K5wa4QwWB8A0OrHM4yWK86Nl6ItEv9c3ctAASLMYLKo="
     },
     "assembly": {
-      "BlazorSkiaWebAssemblyPerformanceTester.aw8z38idhr.wasm": "sha256-NoW/1D5nGc//PAxFE0AhQN3VYVUFfFdaAkM5lkfbRQw=",
+      "BlazorSkiaWebAssemblyPerformanceTester.byyn1h36pr.wasm": "sha256-Tbr4zS+7iP/XkbSEkGTEJLn8WYY8T0UmVfN+oWDRfzw=",
       "Microsoft.AspNetCore.Components.21jedljjy6.wasm": "sha256-KheSm5pVjGmyZkiNB4cMUZi40iQpVE20LI5Nsj1sB8g=",
       "Microsoft.AspNetCore.Components.Web.ebic7ki2t1.wasm": "sha256-ur7dTXTU+qJS7EN76e7VeNVEcMa2dO+KiM7gCzale2M=",
       "Microsoft.AspNetCore.Components.WebAssembly.pq7fdyw1tb.wasm": "sha256-D/ZUWrvE7bqOtBfOWuLj+4RNqOvNZ0SnjD6QrBwUcb8=",
