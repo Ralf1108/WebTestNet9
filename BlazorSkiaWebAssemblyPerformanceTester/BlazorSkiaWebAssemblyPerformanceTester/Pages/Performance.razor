@@ -1,0 +1,314 @@
+﻿@page "/performance"
+
+@inject IJSRuntime _jsRuntime
+
+@using BlazorSkiaWebAssemblyPerformanceTester.Models
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+
+<PageTitle>Performance test Net9</PageTitle>
+
+<h1>Performance test Net9</h1>
+<h2>SkiaSharp WebAssembly (Software / OpenGL)</h2>
+
+@*https://nerocui.com/2022/01/08/when-blazor-meets-skiasharp/*@
+@*https://swharden.com/blog/2021-01-07-blazor-canvas-animated-graphics/*@
+@*https://github.com/pwa-builder/pwa-install*@
+@*https://swimburger.net/blog/dotnet/how-to-deploy-aspnet-blazor-webassembly-to-github-pages*@
+
+<br/>
+<label>OpenGL enabled: @_useOpenGl</label>
+<button class="btn btn-primary" @onclick="SwitchEngine">Switch engine</button>
+
+<br/>
+<label>Renderloop enabled: @_useRenderLoop</label>
+<button class="btn btn-primary" @onclick="ToggleRenderLoop">Toggle renderloop</button>
+
+<br/>
+<label>Shader enabled: @_useShader</label>
+<button class="btn btn-primary" @onclick="ToggleShader">Toggle shader</button>
+
+<br/>
+<label>Use Path enabled: @_usePathRendering</label>
+<button class="btn btn-primary" @onclick="TogglePathRendering">Toggle PathRendering</button>
+<button class="btn btn-primary" @onclick="SimplifyPath">Simplify Path</button>
+<label>Points: @_pointCount</label>
+<label>Verbs: @_verbCount</label>
+
+<br/>
+<label>Balls:</label>
+<input placeholder="Enter ball count" value="@_ballField.Count.ToString()" @onchange="@OnBallCountChanged" />
+<button class="btn btn-primary" @onclick="AddBalls">Add 500 balls</button>
+<button class="btn btn-primary" @onclick="ExportToPdf">Export to PDF</button>
+
+<br/>
+<label>Source code:</label>
+<a href="https://github.com/Ralf1108/WebTestNet9/tree/main/BlazorSkiaWebAssemblyPerformanceTester/BlazorSkiaWebAssemblyPerformanceTester">GitHub</a>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col border rounded p-2 canvas-container" >
+            @if (@_useOpenGl)
+            {
+                <SKGLView
+                    @ref="_skiaViewGl"
+                    @onpointerdown="OnPointerDown"
+                    @onpointermove="OnPointerMove"
+                    @onpointerup="OnPointerUp"
+                    IgnorePixelScaling="true"
+                    EnableRenderLoop=@_useRenderLoop
+                    OnPaintSurface="OnPaintSurface"/>
+            }
+            else
+            {
+                <SKCanvasView
+                    @ref="_skiaView"
+                    @onpointerdown="OnPointerDown"
+                    @onpointermove="OnPointerMove"
+                    @onpointerup="OnPointerUp"
+                    IgnorePixelScaling="true"
+                    EnableRenderLoop=@_useRenderLoop
+                    OnPaintSurface="OnPaintSurface2"/>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+#pragma warning disable CS8618
+    private SKCanvasView? _skiaView;
+    private SKGLView? _skiaViewGl;
+#pragma warning restore CS8618
+
+    private bool _useOpenGl = true;
+    private bool _useRenderLoop = true;
+    private bool _useShader;
+    private bool _usePathRendering;
+
+    private float _moveOffsetX;
+    private float _moveOffsetY;
+    private bool _leftButtonPressed;
+
+    private readonly Field _ballField = new();
+
+    private float _fps;
+    private int _tickIndex;
+    private long _tickSum;
+    private readonly long[] _tickList = new long[25];
+    private long _lastTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+    private SKPath _ballPath = new();
+    private int _pointCount;
+    private int _verbCount;
+
+    protected override void OnInitialized()
+    {
+        _ballField.Resize(400, 400);
+        AddBalls();
+
+        base.OnInitialized();
+    }
+
+    private void OnPaintSurface2(SKPaintSurfaceEventArgs e)
+    {
+        DrawOnSurface(e.Info, e.Surface);
+    }
+
+    private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+    {
+        DrawOnSurface(e.Info, e.Surface);
+    }
+
+    private void OnPointerMove(PointerEventArgs e)
+    {
+        if (_leftButtonPressed)
+        {
+            _moveOffsetX = (float)e.OffsetX;
+            _moveOffsetY = (float)e.OffsetY;
+        }
+
+        Invalidate();
+    }
+
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        if (e.Button == 0)
+            _leftButtonPressed = true;
+    }
+
+    private void OnPointerUp(PointerEventArgs e)
+    {
+        if (e.Button == 0)
+            _leftButtonPressed = false;
+    }
+
+    private void OnBallCountChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not string s)
+            return;
+
+        int.TryParse(s, out var newCount);
+        var diff = newCount - _ballField.Count;
+        if (diff > 0)
+            _ballField.AddRandomBalls(diff);
+        else
+            _ballField.RemoveRandomBalls(-diff);
+
+        UpdateBallPath();
+        StateHasChanged();
+    }
+
+    private async void ExportToPdf()
+    {
+        var metadata = new SKDocumentPdfMetadata
+        {
+            Title = $"TestPdf - {_ballField.Count}"
+        };
+
+        await using var ms = new MemoryStream();
+        var pdf = SKDocument.CreatePdf(ms, metadata);
+        var canvas = pdf.BeginPage(_ballField.Width, _ballField.Height);
+        DrawOnCanvas(canvas);
+        pdf.EndPage();
+        pdf.Close();
+
+        await DownloadHelper.SaveAs(_jsRuntime, "export.pdf", ms.GetBuffer());
+    }
+
+    private void AddBalls()
+    {
+        _ballField.AddRandomBalls(500);
+        UpdateBallPath();
+    }
+
+    private void UpdateBallPath()
+    {
+        var path = new SKPath();
+        foreach (var ball in _ballField.Balls)
+        {
+            var location = new SKPoint(ball.X, ball.Y);
+            path.MoveTo(location);
+            var box = SKRect.Create(location, new SKSize(ball.R, ball.R));
+            path.AddOval(box);
+        }
+
+        _ballPath = path;
+        UpdatePathDetails();
+    }
+
+    private void DrawOnSurface(SKImageInfo info, SKSurface surface)
+    {
+        _ballField.Resize(info.Width, info.Height);
+        _ballField.StepForward();
+
+    // the canvas and properties
+        var canvas = surface.Canvas;
+
+        DrawOnCanvas(canvas);
+    }
+
+    private void DrawOnCanvas(SKCanvas canvas)
+    {
+    // make sure the canvas is blank
+        canvas.Clear(SKColors.Blue);
+        canvas.Translate(_moveOffsetX, _moveOffsetY);
+
+        using var paint = new SKPaint
+        {
+            IsAntialias = true,
+            StrokeWidth = 5f,
+            TextSize = 24,
+        };
+
+    // draw the balls
+        paint.Color = SKColor.Parse("#003366");
+        canvas.DrawRect(0, 0, _ballField.Width, _ballField.Height, paint);
+
+        paint.StrokeWidth = 2;
+        paint.Style = SKPaintStyle.StrokeAndFill;
+        paint.Color = SKColor.Parse("#00FFFF");
+
+    // shader
+        if (_useShader)
+        {
+            var points = new SKPoint[] { new(0, 0), new(256, 256) };
+            var colors = new SKColor[] { SKColors.Blue, SKColors.Yellow };
+            paint.Shader = SKShader.CreateLinearGradient(points[0], points[1], colors, SKShaderTileMode.Clamp);
+        }
+
+        if (_usePathRendering)
+        {
+    // note: path rendering doesn't have movement
+            canvas.DrawPath(_ballPath, paint);
+        }
+        else
+        {
+            foreach (var ball in _ballField.Balls)
+                canvas.DrawCircle(new SKPoint(ball.X, ball.Y), ball.R, paint);
+        }
+
+    // draw the fps counter
+        paint.Shader = null;
+        _fps = GetCurrentFps();
+        paint.Color = SKColor.Parse("#FF0000");
+        canvas.DrawText($"{_fps:00.00}fps", 0, 20, paint);
+    }
+
+    private void SwitchEngine()
+    {
+        _useOpenGl = !_useOpenGl;
+        StateHasChanged();
+    }
+
+    private void Invalidate()
+    {
+        if (_useOpenGl)
+            _skiaViewGl!.Invalidate();
+        else
+            _skiaView!.Invalidate();
+    }
+
+    private void ToggleRenderLoop()
+    {
+        _useRenderLoop = !_useRenderLoop;
+    }
+    
+    private void ToggleShader()
+    {
+        _useShader = !_useShader;
+    }
+    
+    private void TogglePathRendering()
+    {
+        _usePathRendering = !_usePathRendering;
+    }
+    
+    private void SimplifyPath()
+    {
+        _ballPath = _ballPath.Simplify();
+        UpdatePathDetails();
+    }
+
+    private void UpdatePathDetails()
+    {
+        _pointCount = _ballPath.PointCount;
+        _verbCount = _ballPath.VerbCount;
+    }
+
+    private float GetCurrentFps()
+    {
+        var newTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var delta = newTick - _lastTick;
+        _lastTick = newTick;
+
+        _tickSum -= _tickList[_tickIndex];
+        _tickSum += delta;
+        _tickList[_tickIndex] = delta;
+
+        if (++_tickIndex == _tickList.Length)
+            _tickIndex = 0;
+
+        return (float)(1000.0 / ((double)_tickSum / _tickList.Length));
+    }
+}
