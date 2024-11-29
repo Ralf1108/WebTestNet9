@@ -49,8 +49,7 @@ jobs:
       working-directory: BlazorSkiaWebAssemblyPerformanceTester/BlazorSkiaWebAssemblyPerformanceTester
       
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4.2.3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:        
         BRANCH: gh-pages
         FOLDER: BlazorSkiaWebAssemblyPerformanceTester/BlazorSkiaWebAssemblyPerformanceTester/release/wwwroot
